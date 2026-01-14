@@ -1,24 +1,39 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Classe principal da aplicação - Roteamento
+ * Classe principal da aplicação - Roteamento - PHP 8.4+
  */
+final class App
+{
+    private string $controller = 'HomeController';
+    private string $method = 'index';
+    private array $params = [];
 
-class App {
-    protected $controller = 'HomeController';
-    protected $method = 'index';
-    protected $params = [];
-
-    public function __construct() {
+    public function __construct()
+    {
         $url = $this->parseUrl();
         
         // Verificar controller
-        if (isset($url[0]) && file_exists('app/controllers/' . ucfirst($url[0]) . 'Controller.php')) {
-            $this->controller = ucfirst($url[0]) . 'Controller';
-            unset($url[0]);
+        if (isset($url[0]) && $url[0] !== '') {
+            $controllerName = ucfirst($url[0]) . 'Controller';
+            $controllerPath = "app/controllers/{$controllerName}.php";
+            
+            if (file_exists($controllerPath)) {
+                $this->controller = $controllerName;
+                unset($url[0]);
+            }
         }
         
-        require_once 'app/controllers/' . $this->controller . '.php';
-        $this->controller = new $this->controller;
+        $controllerPath = "app/controllers/{$this->controller}.php";
+        
+        if (!file_exists($controllerPath)) {
+            $this->notFound();
+        }
+        
+        require_once $controllerPath;
+        $this->controller = new $this->controller();
         
         // Verificar método
         if (isset($url[1]) && method_exists($this->controller, $url[1])) {
@@ -30,13 +45,39 @@ class App {
         $this->params = $url ? array_values($url) : [];
         
         // Executar
-        call_user_func_array([$this->controller, $this->method], $this->params);
+        try {
+            call_user_func_array([$this->controller, $this->method], $this->params);
+        } catch (Throwable $e) {
+            $this->handleError($e);
+        }
     }
     
-    protected function parseUrl() {
+    private function parseUrl(): array
+    {
         if (isset($_GET['url'])) {
-            return explode('/', filter_var(rtrim($_GET['url'], '/'), FILTER_SANITIZE_URL));
+            $url = filter_var(rtrim($_GET['url'], '/'), FILTER_SANITIZE_URL);
+            return $url !== '' ? explode('/', $url) : [];
         }
         return [];
+    }
+    
+    private function notFound(): never
+    {
+        http_response_code(404);
+        echo "Página não encontrada";
+        exit;
+    }
+    
+    private function handleError(Throwable $e): never
+    {
+        error_log($e->getMessage());
+        http_response_code(500);
+        
+        if (defined('APP_DEBUG') && APP_DEBUG) {
+            echo "<pre>Erro: " . $e->getMessage() . "\n\n" . $e->getTraceAsString() . "</pre>";
+        } else {
+            echo "Erro interno do servidor";
+        }
+        exit;
     }
 }

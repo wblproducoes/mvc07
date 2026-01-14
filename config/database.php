@@ -1,6 +1,10 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Configurações do banco de dados
+ * PHP 8.4+
  */
 
 define('DB_HOST', 'localhost');

@@ -14,6 +14,7 @@
                 <ul class="nav-menu">
                     <li><a href="<?= BASE_URL ?>/home">Dashboard</a></li>
                     <li><a href="<?= BASE_URL ?>/users">Usuários</a></li>
+                    <li><a href="<?= BASE_URL ?>/about">Sobre</a></li>
                     <li><a href="<?= BASE_URL ?>/auth/logout">Sair</a></li>
                 </ul>
             <?php endif; ?>

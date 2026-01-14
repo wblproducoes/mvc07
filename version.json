@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "name": "Sistema Administrativo PHP MVC",
+  "codename": "Genesis",
+  "releaseDate": "2026-01-14",
+  "stability": "stable",
+  "php": {
+    "minimum": "8.4.0",
+    "recommended": "8.5.0"
+  },
+  "mysql": {
+    "minimum": "5.7.0",
+    "recommended": "8.0.0"
+  },
+  "features": [
+    "PHP 8.4+ with strict types",
+    "MVC Architecture",
+    "Authentication System",
+    "CSRF Protection",
+    "SQL Injection Prevention",
+    "XSS Protection",
+    "Password Hashing",
+    "Responsive Design",
+    "URL Routing",
+    "Enums for types",
+    "Readonly properties",
+    "Union types",
+    "Attributes"
+  ],
+  "changelog": "CHANGELOG.md",
+  "repository": "https://github.com/wblproducoes/mvc07",
+  "license": "MIT"
+}

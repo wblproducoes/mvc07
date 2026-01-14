@@ -1,6 +1,10 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Front Controller - Ponto de entrada da aplicação
+ * PHP 8.4+ - Orientação a Objetos
  */
 
 session_start();
@@ -10,7 +14,7 @@ require_once 'config/config.php';
 require_once 'config/database.php';
 
 // Autoloader
-spl_autoload_register(function ($class) {
+spl_autoload_register(function (string $class): void {
     $paths = [
         'app/controllers/',
         'app/models/',
@@ -27,4 +31,4 @@ spl_autoload_register(function ($class) {
 });
 
 // Inicializar aplicação
-$app = new App();
+new App();
