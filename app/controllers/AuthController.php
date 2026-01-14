@@ -144,6 +144,9 @@ final class AuthController extends Controller
         $userModel = $this->model('User');
         
         if ($userModel->register($data)) {
+            // Enviar email de boas-vindas
+            Mailer::sendWelcome($email, $name);
+            
             $this->redirect('auth/login');
         } else {
             $this->view('auth/register', [

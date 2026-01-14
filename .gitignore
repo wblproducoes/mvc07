@@ -1,5 +1,6 @@
 # Configurações locais
 config/database.php
+config/mail.php
 
 # Uploads
 uploads/*

@@ -16,6 +16,8 @@
     "PHP 8.4+ with strict types",
     "Twig 3.0 Template Engine",
     "Bootstrap 5.3 Framework",
+    "PHPMailer 6.9 Email",
+    "PHPDoc documentation",
     "MVC Architecture",
     "Authentication System",
     "CSRF Protection",
@@ -30,7 +32,9 @@
     "Attributes",
     "Template caching",
     "Auto-escaping",
-    "Bootstrap Icons"
+    "Bootstrap Icons",
+    "Email templates",
+    "SMTP support"
   ],
   "changelog": "CHANGELOG.md",
   "repository": "https://github.com/wblproducoes/mvc07",

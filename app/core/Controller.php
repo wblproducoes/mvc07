@@ -7,12 +7,49 @@ use Twig\Loader\FilesystemLoader;
 use Twig\TwigFunction;
 
 /**
- * Controller base - PHP 8.4+ com Twig 3.0
+ * Controller base
+ * 
+ * Classe abstrata que fornece métodos auxiliares para controllers,
+ * incluindo renderização de views com Twig, carregamento de models,
+ * redirecionamentos e autenticação.
+ * 
+ * @package App\Core
+ * @author  WBL Produções
+ * @version 1.0.0
+ * @since   1.0.0
+ * 
+ * @example
+ * ```php
+ * class HomeController extends Controller {
+ *     public function index(): void {
+ *         $this->requireAuth();
+ *         $this->view('home/index', ['data' => $data]);
+ *     }
+ * }
+ * ```
  */
 abstract class Controller
 {
+    /**
+     * Instância do Twig Environment (Singleton)
+     * 
+     * @var Environment|null
+     */
     protected static ?Environment $twig = null;
     
+    /**
+     * Carrega e instancia um model
+     * 
+     * @param string $model Nome do model (sem extensão .php)
+     * @return object Instância do model
+     * @throws RuntimeException Se o model não for encontrado
+     * 
+     * @example
+     * ```php
+     * $userModel = $this->model('User');
+     * $users = $userModel->findAll();
+     * ```
+     */
     protected function model(string $model): object
     {
         $modelPath = "app/models/{$model}.php";
@@ -25,6 +62,22 @@ abstract class Controller
         return new $model();
     }
     
+    /**
+     * Renderiza uma view usando Twig
+     * 
+     * @param string $view Caminho da view (sem extensão .twig)
+     * @param array $data Dados a serem passados para a view
+     * @return void
+     * @throws RuntimeException Se a view não for encontrada
+     * 
+     * @example
+     * ```php
+     * $this->view('home/index', [
+     *     'title' => 'Dashboard',
+     *     'users' => $users
+     * ]);
+     * ```
+     */
     protected function view(string $view, array $data = []): void
     {
         $twig = $this->getTwig();
@@ -80,12 +133,37 @@ abstract class Controller
         return self::$twig;
     }
     
+    /**
+     * Redireciona para uma URL
+     * 
+     * @param string $url URL relativa (sem BASE_URL)
+     * @return never Nunca retorna (exit)
+     * 
+     * @example
+     * ```php
+     * $this->redirect('home');
+     * $this->redirect('auth/login');
+     * ```
+     */
     protected function redirect(string $url): never
     {
         header('Location: ' . BASE_URL . '/' . ltrim($url, '/'));
         exit;
     }
     
+    /**
+     * Retorna resposta JSON
+     * 
+     * @param mixed $data Dados a serem convertidos para JSON
+     * @param int $status Código de status HTTP (padrão: 200)
+     * @return never Nunca retorna (exit)
+     * 
+     * @example
+     * ```php
+     * $this->json(['success' => true, 'data' => $users]);
+     * $this->json(['error' => 'Not found'], 404);
+     * ```
+     */
     protected function json(mixed $data, int $status = 200): never
     {
         http_response_code($status);
@@ -94,11 +172,36 @@ abstract class Controller
         exit;
     }
     
+    /**
+     * Verifica se o usuário está autenticado
+     * 
+     * @return bool True se autenticado
+     * 
+     * @example
+     * ```php
+     * if ($this->isAuthenticated()) {
+     *     // Usuário logado
+     * }
+     * ```
+     */
     protected function isAuthenticated(): bool
     {
         return isset($_SESSION['user_id']) && is_int($_SESSION['user_id']);
     }
     
+    /**
+     * Requer autenticação, redireciona para login se não autenticado
+     * 
+     * @return void
+     * 
+     * @example
+     * ```php
+     * public function dashboard(): void {
+     *     $this->requireAuth();
+     *     // Código protegido
+     * }
+     * ```
+     */
     protected function requireAuth(): void
     {
         if (!$this->isAuthenticated()) {
@@ -106,11 +209,31 @@ abstract class Controller
         }
     }
     
+    /**
+     * Retorna o ID do usuário autenticado
+     * 
+     * @return int|null ID do usuário ou null se não autenticado
+     * 
+     * @example
+     * ```php
+     * $userId = $this->getCurrentUserId();
+     * ```
+     */
     protected function getCurrentUserId(): ?int
     {
         return $_SESSION['user_id'] ?? null;
     }
     
+    /**
+     * Retorna o nome do usuário autenticado
+     * 
+     * @return string|null Nome do usuário ou null se não autenticado
+     * 
+     * @example
+     * ```php
+     * $userName = $this->getCurrentUserName();
+     * ```
+     */
     protected function getCurrentUserName(): ?string
     {
         return $_SESSION['user_name'] ?? null;

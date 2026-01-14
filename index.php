@@ -12,6 +12,7 @@ session_start();
 // Configurações
 require_once 'config/config.php';
 require_once 'config/database.php';
+require_once 'config/mail.php';
 
 // Composer autoloader (Twig)
 if (file_exists('vendor/autoload.php')) {
