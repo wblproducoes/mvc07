@@ -14,6 +14,8 @@
   },
   "features": [
     "PHP 8.4+ with strict types",
+    "Twig 3.0 Template Engine",
+    "Bootstrap 5.3 Framework",
     "MVC Architecture",
     "Authentication System",
     "CSRF Protection",
@@ -25,7 +27,10 @@
     "Enums for types",
     "Readonly properties",
     "Union types",
-    "Attributes"
+    "Attributes",
+    "Template caching",
+    "Auto-escaping",
+    "Bootstrap Icons"
   ],
   "changelog": "CHANGELOG.md",
   "repository": "https://github.com/wblproducoes/mvc07",

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * Front Controller - Ponto de entrada da aplicação
- * PHP 8.4+ - Orientação a Objetos
+ * PHP 8.4+ com Twig 3.0
  */
 
 session_start();
@@ -13,12 +13,21 @@ session_start();
 require_once 'config/config.php';
 require_once 'config/database.php';
 
-// Autoloader
+// Composer autoloader (Twig)
+if (file_exists('vendor/autoload.php')) {
+    require_once 'vendor/autoload.php';
+} else {
+    die('Execute: composer install');
+}
+
+// Autoloader customizado
 spl_autoload_register(function (string $class): void {
     $paths = [
         'app/controllers/',
         'app/models/',
-        'app/core/'
+        'app/core/',
+        'app/core/Enums/',
+        'app/core/Attributes/'
     ];
     
     foreach ($paths as $path) {

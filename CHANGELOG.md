@@ -25,6 +25,19 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### Adicionado
 - PHP 8.4+ com Orientação a Objetos (compatível com PHP 8.4 e 8.5)
+- Twig 3.0 como Template Engine
+  - Auto-escaping para prevenção de XSS
+  - Cache de templates para performance
+  - Funções customizadas (asset, route, csrf_token, version)
+  - Sistema de herança de templates
+  - Variáveis globais automáticas
+- Bootstrap 5.3 como Framework CSS
+  - Design responsivo mobile-first
+  - Componentes modernos (cards, navbar, forms, alerts)
+  - Bootstrap Icons integrado
+  - Grid system flexível
+  - Utilitários CSS prontos
+  - Tema dark mode ready
 - Tipagem forte (strict_types) em todos os arquivos
 - Propriedades readonly para imutabilidade
 - Union types (array|false, mixed)
@@ -38,6 +51,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Sistema de autenticação (login/logout)
 - Registro de novos usuários
 - Dashboard administrativo básico
+- Composer para gerenciamento de dependências
 - Proteção CSRF em todos os formulários
 - Sanitização automática de inputs
 - Hashing seguro de senhas com bcrypt

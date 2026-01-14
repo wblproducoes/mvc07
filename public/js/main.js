@@ -1,25 +1,33 @@
-// Validação de formulários
+// Validação de formulários com Bootstrap
 document.addEventListener('DOMContentLoaded', function() {
-    const forms = document.querySelectorAll('form');
+    // Validação de formulários
+    const forms = document.querySelectorAll('.needs-validation');
     
-    forms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            const inputs = form.querySelectorAll('input[required]');
-            let valid = true;
-            
-            inputs.forEach(input => {
-                if (!input.value.trim()) {
-                    valid = false;
-                    input.style.borderColor = '#e74c3c';
-                } else {
-                    input.style.borderColor = '#ddd';
-                }
-            });
-            
-            if (!valid) {
-                e.preventDefault();
-                alert('Por favor, preencha todos os campos obrigatórios.');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
             }
-        });
+            form.classList.add('was-validated');
+        }, false);
     });
+    
+    // Auto-dismiss alerts após 5 segundos
+    const alerts = document.querySelectorAll('.alert:not(.alert-permanent)');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        }, 5000);
+    });
+    
+    // Tooltips Bootstrap
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    
+    // Popovers Bootstrap
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
 });
+

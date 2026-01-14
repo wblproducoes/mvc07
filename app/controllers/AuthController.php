@@ -27,16 +27,14 @@ final class AuthController extends Controller
         
         if (!Security::validateCSRF($_POST['csrf_token'] ?? null)) {
             $this->view('auth/login', [
-                'error' => 'Token CSRF inválido',
-                'csrf_token' => Security::createCSRFToken()
+                'error' => 'Token CSRF inválido'
             ]);
             return;
         }
         
         if (empty($email) || empty($password)) {
             $this->view('auth/login', [
-                'error' => 'Preencha todos os campos',
-                'csrf_token' => Security::createCSRFToken()
+                'error' => 'Preencha todos os campos'
             ]);
             return;
         }
@@ -58,17 +56,14 @@ final class AuthController extends Controller
             $this->redirect('home');
         } else {
             $this->view('auth/login', [
-                'error' => 'Credenciais inválidas',
-                'csrf_token' => Security::createCSRFToken()
+                'error' => 'Credenciais inválidas'
             ]);
         }
     }
     
     private function showLoginForm(): void
     {
-        $this->view('auth/login', [
-            'csrf_token' => Security::createCSRFToken()
-        ]);
+        $this->view('auth/login');
     }
     
     public function logout(): void
@@ -109,8 +104,7 @@ final class AuthController extends Controller
     {
         if (!Security::validateCSRF($_POST['csrf_token'] ?? null)) {
             $this->view('auth/register', [
-                'error' => 'Token CSRF inválido',
-                'csrf_token' => Security::createCSRFToken()
+                'error' => 'Token CSRF inválido'
             ]);
             return;
         }
@@ -121,24 +115,21 @@ final class AuthController extends Controller
         
         if (empty($name) || empty($email) || empty($password)) {
             $this->view('auth/register', [
-                'error' => 'Preencha todos os campos',
-                'csrf_token' => Security::createCSRFToken()
+                'error' => 'Preencha todos os campos'
             ]);
             return;
         }
         
         if (strlen($password) < 6) {
             $this->view('auth/register', [
-                'error' => 'A senha deve ter no mínimo 6 caracteres',
-                'csrf_token' => Security::createCSRFToken()
+                'error' => 'A senha deve ter no mínimo 6 caracteres'
             ]);
             return;
         }
         
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->view('auth/register', [
-                'error' => 'E-mail inválido',
-                'csrf_token' => Security::createCSRFToken()
+                'error' => 'E-mail inválido'
             ]);
             return;
         }
@@ -156,16 +147,13 @@ final class AuthController extends Controller
             $this->redirect('auth/login');
         } else {
             $this->view('auth/register', [
-                'error' => 'E-mail já cadastrado ou erro ao registrar',
-                'csrf_token' => Security::createCSRFToken()
+                'error' => 'E-mail já cadastrado ou erro ao registrar'
             ]);
         }
     }
     
     private function showRegisterForm(): void
     {
-        $this->view('auth/register', [
-            'csrf_token' => Security::createCSRFToken()
-        ]);
+        $this->view('auth/register');
     }
 }

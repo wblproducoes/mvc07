@@ -1,0 +1,91 @@
+{% extends 'layouts/base.twig' %}
+
+{% block title %}Sobre - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0"><i class="bi bi-info-circle"></i> {{ info.name }}</h2>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5><i class="bi bi-tag"></i> Versão</h5>
+                        <p class="lead">{{ info.formatted }}</p>
+                    </div>
+                    {% if info.releaseDate %}
+                    <div class="col-md-6">
+                        <h5><i class="bi bi-calendar"></i> Data de Lançamento</h5>
+                        <p class="lead">{{ info.releaseDate }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-4">
+                    <h5><i class="bi bi-shield-check"></i> Estabilidade</h5>
+                    <span class="badge bg-success fs-6">{{ info.stability|capitalize }}</span>
+                </div>
+                
+                <hr>
+                
+                <div class="mb-4">
+                    <h4><i class="bi bi-code-slash"></i> Ambiente PHP</h4>
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th>Versão Atual</th>
+                                <td><span class="badge bg-info">{{ info.php.current }}</span></td>
+                            </tr>
+                            <tr>
+                                <th>Versão Mínima</th>
+                                <td><span class="badge bg-secondary">{{ info.php.minimum }}</span></td>
+                            </tr>
+                            <tr>
+                                <th>Versão Recomendada</th>
+                                <td><span class="badge bg-primary">{{ info.php.recommended }}</span></td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td>
+                                    {% if info.php.current >= info.php.minimum %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle"></i> PHP compatível
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-danger">
+                                            <i class="bi bi-x-circle"></i> PHP incompatível
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                {% if info.features is not empty %}
+                <hr>
+                
+                <div class="mb-4">
+                    <h4><i class="bi bi-star"></i> Recursos</h4>
+                    <div class="row">
+                        {% for feature in info.features %}
+                            <div class="col-md-6 mb-2">
+                                <i class="bi bi-check-circle-fill text-success"></i> {{ feature }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="text-center mt-4">
+                    <a href="{{ base_url }}/CHANGELOG.md" class="btn btn-outline-primary" target="_blank">
+                        <i class="bi bi-journal-text"></i> Ver Changelog
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

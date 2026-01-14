@@ -2,11 +2,17 @@
 
 declare(strict_types=1);
 
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+use Twig\TwigFunction;
+
 /**
- * Controller base - PHP 8.4+
+ * Controller base - PHP 8.4+ com Twig 3.0
  */
 abstract class Controller
 {
+    protected static ?Environment $twig = null;
+    
     protected function model(string $model): object
     {
         $modelPath = "app/models/{$model}.php";
@@ -21,15 +27,57 @@ abstract class Controller
     
     protected function view(string $view, array $data = []): void
     {
-        extract($data);
+        $twig = $this->getTwig();
         
-        $viewPath = "app/views/{$view}.php";
+        // Adicionar variáveis globais
+        $data['app_name'] = APP_NAME;
+        $data['base_url'] = BASE_URL;
+        $data['current_user'] = [
+            'id' => $this->getCurrentUserId(),
+            'name' => $this->getCurrentUserName(),
+            'email' => $_SESSION['user_email'] ?? null,
+            'role' => $_SESSION['user_role'] ?? null,
+        ];
+        $data['is_authenticated'] = $this->isAuthenticated();
         
-        if (!file_exists($viewPath)) {
-            throw new RuntimeException("View {$view} não encontrada");
+        try {
+            echo $twig->render("{$view}.twig", $data);
+        } catch (\Twig\Error\LoaderError $e) {
+            throw new RuntimeException("Template {$view}.twig não encontrado: " . $e->getMessage());
+        }
+    }
+    
+    protected function getTwig(): Environment
+    {
+        if (self::$twig === null) {
+            $loader = new FilesystemLoader('app/views');
+            
+            self::$twig = new Environment($loader, [
+                'cache' => APP_DEBUG ? false : 'cache/twig',
+                'debug' => APP_DEBUG,
+                'auto_reload' => APP_DEBUG,
+                'strict_variables' => true,
+            ]);
+            
+            // Adicionar funções customizadas
+            self::$twig->addFunction(new TwigFunction('asset', function (string $path): string {
+                return BASE_URL . '/public/' . ltrim($path, '/');
+            }));
+            
+            self::$twig->addFunction(new TwigFunction('route', function (string $path): string {
+                return BASE_URL . '/' . ltrim($path, '/');
+            }));
+            
+            self::$twig->addFunction(new TwigFunction('csrf_token', function (): string {
+                return Security::createCSRFToken();
+            }));
+            
+            self::$twig->addFunction(new TwigFunction('version', function (): string {
+                return Version::getFormatted();
+            }));
         }
         
-        require_once $viewPath;
+        return self::$twig;
     }
     
     protected function redirect(string $url): never
